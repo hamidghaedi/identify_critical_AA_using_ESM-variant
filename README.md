@@ -10,7 +10,6 @@ ESM-variant's predictions are presented as log-likelihood ratios (LLR), with a c
 
 To identify critically important residues, I established the following criteria: (i) a residue must not possess an LLR score greater than -7.5, and (ii) the mean LLR for all possible missense alterations must exceed -7.5.
 
-The provided text looks quite clear and informative. However, I've made a few minor adjustments for clarity and consistency:
 
 The resulting data contains four columns:
 
