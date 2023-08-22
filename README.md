@@ -8,7 +8,7 @@ In this post, I utilized the ESM1-variant tool ([Nature Genetics, 2023](https://
 
 ESM-variant's predictions are presented as log-likelihood ratios (LLR), with a cutoff of -7.5. Employing this LLR threshold of -7.5 to distinguish between pathogenic and benign variants resulted in an 81% true-positive rate and an 82% true-negative rate in both ClinVar and HGMD datasets.
 
-To identify critically important residues, I established the following criteria: (i) a residue must not possess an LLR score greater than -7.5, and (ii) the mean LLR for all possible missense alterations must exceed -7.5.
+A critically important residue can be think of as a residue where substitution of the wild-type amino acid with almost any other amino acids, lead to damaging effects. To identify such residue , I established the following criteria: (i) Given the 19 possible LLR scores at each position, a residue must not possess an LLR score greater than -7.5, and (ii) the mean LLR for all possible missense alterations must exceed -7.5.
 
 
 The resulting data contains four columns:
@@ -35,13 +35,13 @@ library(dplyr)
 # Reading the prediction score in R
 gn<- read.csv("~/RPE65_(RPE65) _ Q16518.csv")
 
-# Filter and calculate mean 
+
 # Filter and calculate mean 
 result_df <- gn %>%
   mutate(pos_variant = paste0(substr(variant, 1, 1), "_", pos)) %>%
   filter(!grepl("(.)\\d\\1", variant)) %>%  # Exclude rows with same letter before and after number
   group_by(pos, pos_variant) %>%
-  summarise(mean_score = round(mean(score),2)
+  summarise(mean_score = round(mean(score),2))
   
 # Adding more info
 result_df$Is_critical <- cut(result_df$mean_score, 
@@ -50,13 +50,13 @@ result_df$Is_critical <- cut(result_df$mean_score,
                             
 # Currently there are some residues identified in the Variant Curation Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines 
 # as critically important 
-known_aa<- c("aa_180", "aa_182","aa_241","aa_313", "aa_417", "aa_527", "aa_107", "aa_125" )
+known_aa<- c("H_180", "H_182","His_241","His_313", "E_417", "H_527", "A_107", "G_125" )
 
 # adding more data
-result_df$Is_in_guideline <- ifelse(result_df$pos %in% known_aa, "yes",
+result_df$Is_in_guideline <- ifelse(result_df$pos_variant %in% known_aa, "yes",
 "no")
 RPE65_critical_residues <- result_df[, -1]
-write.csv(RPE65_critical_residues, "RPE65_critical_residues.csv", row.names = F, col.names = T)
+write.csv(RPE65_critical_residues, "RPE65_critical_residues.csv", row.names = F)
 ```
 
 The resulting data is available belwo and also fo download as the file named "RPE65_critical_residues.csv" from this repo.
@@ -122,7 +122,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | F_57        | -10.79     | yes          | no              |
 | Y_58        | -5.72      | no           | no              |
 | H_59        | -12.54     | yes          | no              |
-| L_60        | -10.05     | yes          | no              |
+| L_60        | -10.04     | yes          | no              |
 | F_61        | -13.49     | yes          | no              |
 | D_62        | -14.2      | yes          | no              |
 | G_63        | -12.49     | yes          | no              |
@@ -142,7 +142,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | V_77        | -12.84     | yes          | no              |
 | T_78        | -9.59      | yes          | no              |
 | Y_79        | -13.46     | yes          | no              |
-| H_80        | -5.61      | no           | no              |
+| H_80        | -5.6       | no           | no              |
 | R_81        | -7.27      | in_gray_zone | no              |
 | R_82        | -10.75     | yes          | no              |
 | F_83        | -11.88     | yes          | no              |
@@ -168,7 +168,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | G_104       | -12.72     | yes          | no              |
 | T_105       | -12.29     | yes          | no              |
 | C_106       | -3.09      | no           | no              |
-| A_107       | -10.68     | yes          | no              |
+| A_107       | -10.68     | yes          | yes             |
 | F_108       | -8.51      | yes          | no              |
 | P_109       | -12.13     | yes          | no              |
 | D_110       | -13.92     | yes          | no              |
@@ -184,7 +184,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | Y_122       | -9.39      | yes          | no              |
 | F_123       | -11.5      | yes          | no              |
 | R_124       | -7.76      | in_gray_zone | no              |
-| G_125       | -9.99      | yes          | no              |
+| G_125       | -9.99      | yes          | yes             |
 | V_126       | -8.2       | in_gray_zone | no              |
 | E_127       | -9.13      | yes          | no              |
 | V_128       | -5.82      | no           | no              |
@@ -218,7 +218,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | T_159       | -9.98      | yes          | no              |
 | L_160       | -12.74     | yes          | no              |
 | T_162       | -10.58     | yes          | no              |
-| I_163       | -6.91      | in_gray_zone | no              |
+| I_163       | -6.9       | in_gray_zone | no              |
 | K_164       | -9.89      | yes          | no              |
 | Q_165       | -7.92      | in_gray_zone | no              |
 | V_166       | -10.31     | yes          | no              |
@@ -234,8 +234,8 @@ The resulting data is available belwo and also fo download as the file named "RP
 | A_177       | -8.59      | yes          | no              |
 | T_178       | -11.51     | yes          | no              |
 | A_179       | -11.55     | yes          | no              |
-| H_180       | -14.75     | yes          | no              |
-| H_182       | -12.34     | yes          | no              |
+| H_180       | -14.75     | yes          | yes             |
+| H_182       | -12.34     | yes          | yes             |
 | I_183       | -6.57      | in_gray_zone | no              |
 | E_184       | -7.37      | in_gray_zone | no              |
 | N_185       | -4         | no           | no              |
@@ -317,7 +317,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | S_269       | -3.49      | no           | no              |
 | L_270       | -8.56      | yes          | no              |
 | W_271       | -5.63      | no           | no              |
-| A_273       | -7.31      | in_gray_zone | no              |
+| A_273       | -7.3       | in_gray_zone | no              |
 | N_274       | -7.53      | in_gray_zone | no              |
 | Y_275       | -9.39      | yes          | no              |
 | M_276       | -7.54      | in_gray_zone | no              |
@@ -447,7 +447,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | R_413       | -5.12      | no           | no              |
 | A_415       | -6.46      | no           | no              |
 | F_416       | -8.85      | yes          | no              |
-| E_417       | -12.72     | yes          | no              |
+| E_417       | -12.72     | yes          | yes             |
 | F_418       | -9.3       | yes          | no              |
 | P_419       | -12.07     | yes          | no              |
 | Q_420       | -10.25     | yes          | no              |
@@ -546,7 +546,7 @@ The resulting data is available belwo and also fo download as the file named "RP
 | P_523       | -10.69     | yes          | no              |
 | V_524       | -7.82      | in_gray_zone | no              |
 | F_526       | -10.62     | yes          | no              |
-| H_527       | -13.88     | yes          | no              |
+| H_527       | -13.88     | yes          | yes             |
 | G_528       | -13.02     | yes          | no              |
 | L_529       | -9.68      | yes          | no              |
 | F_530       | -12.78     | yes          | no              |
