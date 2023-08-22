@@ -19,47 +19,10 @@ The resulting data contains four columns:
 
 `Is_critical`: Based on established criteria, variants falling between -8.5 and -6.5 are labeled as 'in_gray_zone'.
 
-`Is_in_guideline`: Indicates whether the position is identified as critical by the ClinGen LCA / eoRD VCEP guidelines.
-
-Steps in this guide
-
-### Steps in this guide
-
-1- Obtaining the ESM-variant prediction from the model deployment in [huggingface](https://huggingface.co/spaces/ntranoslab/esm_variants)
-
-2- Labeling the residues according to the abovementioned criteria.
-
-``` r
-library(dplyr)
-
-# Reading the prediction score in R
-gn<- read.csv("~/RPE65_(RPE65) _ Q16518.csv")
+`Is_in_guideline`: Indicates whether the position is identified as critical by the ClinGen LCA / eoRD VCEP guidelines. As it can be seen in the result, the analysis could correctly identify critical residues indicated in the guideline as critical. 
 
 
-# Filter and calculate mean 
-result_df <- gn %>%
-  mutate(pos_variant = paste0(substr(variant, 1, 1), "_", pos)) %>%
-  filter(!grepl("(.)\\d\\1", variant)) %>%  # Exclude rows with same letter before and after number
-  group_by(pos, pos_variant) %>%
-  summarise(mean_score = round(mean(score),2))
-  
-# Adding more info
-result_df$Is_critical <- cut(result_df$mean_score, 
-                            breaks = c(-Inf,-8.5, -6.5, +Inf), 
-                            labels = c("yes", "in_gray_zone", "no")) 
-                            
-# Currently there are some residues identified in the Variant Curation Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines 
-# as critically important 
-known_aa<- c("H_180", "H_182","His_241","His_313", "E_417", "H_527", "A_107", "G_125" )
-
-# adding more data
-result_df$Is_in_guideline <- ifelse(result_df$pos_variant %in% known_aa, "yes",
-"no")
-RPE65_critical_residues <- result_df[, -1]
-write.csv(RPE65_critical_residues, "RPE65_critical_residues.csv", row.names = F)
-```
-
-The resulting data is available belwo and also fo download as the file named "RPE65_critical_residues.csv" from this repo.
+The resulting data is available below and also fo download as the file named "RPE65_critical_residues.csv" from this repo.
 
 | pos_variant | mean_score | Is_critical  | Is_in_guideline |
 |-------------|------------|--------------|-----------------|
@@ -553,3 +516,43 @@ The resulting data is available belwo and also fo download as the file named "RP
 | K_531       | -7.74      | in_gray_zone | no              |
 | K_532       | -7.55      | in_gray_zone | no              |
 | S_533       | -4.92      | no           | no              |
+
+
+
+Steps in this guide
+
+### Steps in this guide
+
+1- Obtaining the ESM-variant prediction from the model deployment in [huggingface](https://huggingface.co/spaces/ntranoslab/esm_variants)
+
+2- Labeling the residues according to the abovementioned criteria.
+
+``` r
+library(dplyr)
+
+# Reading the prediction score in R
+gn<- read.csv("~/RPE65_(RPE65) _ Q16518.csv")
+
+
+# Filter and calculate mean 
+result_df <- gn %>%
+  mutate(pos_variant = paste0(substr(variant, 1, 1), "_", pos)) %>%
+  filter(!grepl("(.)\\d\\1", variant)) %>%  # Exclude rows with same letter before and after number
+  group_by(pos, pos_variant) %>%
+  summarise(mean_score = round(mean(score),2))
+  
+# Adding more info
+result_df$Is_critical <- cut(result_df$mean_score, 
+                            breaks = c(-Inf,-8.5, -6.5, +Inf), 
+                            labels = c("yes", "in_gray_zone", "no")) 
+                            
+# Currently there are some residues identified in the Variant Curation Expert Panel Specifications to the ACMG/AMP Variant Interpretation Guidelines 
+# as critically important 
+known_aa<- c("H_180", "H_182","His_241","His_313", "E_417", "H_527", "A_107", "G_125" )
+
+# adding more data
+result_df$Is_in_guideline <- ifelse(result_df$pos_variant %in% known_aa, "yes",
+"no")
+RPE65_critical_residues <- result_df[, -1]
+write.csv(RPE65_critical_residues, "RPE65_critical_residues.csv", row.names = F)
+```
