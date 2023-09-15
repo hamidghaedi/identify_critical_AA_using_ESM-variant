@@ -8,7 +8,7 @@ In this post, I utilized the ESM1-variant tool ([Nature Genetics, 2023](https://
 
 ESM-variant's predictions are presented as log-likelihood ratios (LLR), with a cutoff of -7.5. Employing this LLR threshold of -7.5 to distinguish between pathogenic and benign variants resulted in an 81% true-positive rate and an 82% true-negative rate in both ClinVar and HGMD datasets.
 
-A critically important residue can be think of as a residue where substitution of the wild-type amino acid with almost any other amino acids, lead to damaging effects. To identify such residue , I established the following criteria: (i) Given the 19 possible LLR scores at each position, a residue must not possess an LLR score greater than -7.5, and (ii) the mean LLR for all possible missense alterations must exceed -7.5.
+A critically important residue can be thought of as a residue where the substitution of the wild-type amino acid with almost any other amino acid, leads to damaging effects. To identify such residue, I established the following criteria: (i) Given the 19 possible LLR scores at each position, a residue must not possess an LLR score greater than -7.5, and (ii) the mean LLR for all possible missense alterations must exceed -7.5.
 
 
 The resulting data contains four columns:
@@ -17,12 +17,12 @@ The resulting data contains four columns:
 
 `mean_score`: Represents the average Log-Likelihood ratio (LLR) score for all potential missense variations at a given position.
 
-`Is_critical`: Based on established criteria, variants falling between -8.5 and -6.5 are labeled as 'in_gray_zone'.
+`Is_critical`: If the mean score is > -6.5 , the residue is believed to be non-critical. If the mean score is <-8.5, it is believed to be critical for protein function. Residues with a mean score  between -8.5 and -6.5 are labeled as 'in_gray_zone'.
 
-`Is_in_guideline`: Indicates whether the position is identified as critical by the ClinGen LCA / eoRD VCEP guidelines. As it can be seen in the result, the analysis could correctly identify critical residues indicated in the guideline as critical. 
+`Is_in_guideline`: Indicates whether the position is identified as critical by the ClinGen LCA / eoRD VCEP guidelines. As can be seen in the result, the analysis could correctly identify critical residues indicated in the guideline as critical. 
 
 
-The resulting data is available below and also fo download as the file named "RPE65_critical_residues.csv" from this repo.
+The resulting data is available below and also for download as the file named "RPE65_critical_residues.csv" from this repo.
 
 | pos_variant | mean_score | Is_critical  | Is_in_guideline |
 |-------------|------------|--------------|-----------------|
