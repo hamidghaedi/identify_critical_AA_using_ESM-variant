@@ -46,7 +46,9 @@ The resulting data looks like the following table:
 #### *GUCY2D* : [link](https://github.com/hamidghaedi/identify_critical_AA_using_ESM-variant/blob/main/GUCY2D_critical_residues.csv)
 
 
-Steps in this guide
+
+
+
 
 ### Steps in this guide
 
