@@ -1,4 +1,4 @@
-# identify critical AA using ESM-variant
+#  Identify critical amino acids in a protein using ESM-variant
 
 A variant can meet the PM1 criteria if it is located within a mutational hotspot and/or a critical, well-established functional domain (e.g., the active site of an enzyme) with no benign variations.
 
@@ -39,7 +39,7 @@ The resulting data looks like the following table:
 | Y_12        | -7.15      | in_gray_zone | no              |
 
 
-### Analysis result is available for the following genes:
+### Analysis results are available for the following genes:
 
 #### *RPE65* : [link](https://github.com/hamidghaedi/identify_critical_AA_using_ESM-variant/blob/main/RPE65_critical_residues.csv)
 #### *CE290* : [link](https://github.com/hamidghaedi/identify_critical_AA_using_ESM-variant/blob/main/CE290_critical_residues.csv)
